@@ -2,11 +2,13 @@ const express = require('express');
 
 const app = express();
 
-app.get("/user/:userId/:name/:password",(req,res)=>{
-    console.log(req.params)
-  //  console.log(req.query);
-    res.send({firstname:"khushi",lastname:"gupta"})
-})
+app.use("/user",[(req,res,next)=>{
+    //Route Handler 1
+ // res.send("Route Handler 1")
+  next();
+},(req,res)=>{
+   res.send("Route Handler 2")
+}])
 
 
 app.listen(3000,()=>{
