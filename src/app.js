@@ -14,6 +14,11 @@ app.get("/admin/getAllData",(req,res)=>{
     res.send("All Data send")
 })
 
+app.use("/",(err,req,res,next)=>{
+    if(err){
+        res.status(500).send("something went wrong")
+    }
+})
 app.listen(3000,()=>{
     console.log("Server is successfully listening")
 });
