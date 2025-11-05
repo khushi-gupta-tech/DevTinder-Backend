@@ -3,14 +3,26 @@ const express = require("express");
 const { connectDB } = require("./config/database");
 const app = express();
 const User = require("./models/user");
-
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 app.use(express.json());
 
 app.post("/signup", async (req, res) => {
-  // creating a new instance of the User model
-  const user = new User(req.body);
-
   try {
+    // Validation of the data
+    validateSignUpData(req);
+    const { password, firstName, lastName, emailId } = req.body;
+    // Encrypt the passord
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Creating a new instance of the User model
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+    });
     await user.save();
     res.send("User Added successfully");
   } catch (err) {
@@ -67,9 +79,9 @@ app.patch("/user/:userId", async (req, res) => {
     if (!isUpdateAllowed) {
       throw new Error("update not allowed");
     }
-    
-    if(data?.skills.length >10){
-      throw new Error("Skills cannot be more than 10")
+
+    if (data?.skills.length > 10) {
+      throw new Error("Skills cannot be more than 10");
     }
 
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
