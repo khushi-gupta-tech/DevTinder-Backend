@@ -29,14 +29,22 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
-    const connectionRequests = await connectionRequest.find({
-      $or: [
-        { toUserId: loggedInUser._id, status: "accepted" },
-        { fromUserId: loggedInUser._id, status: "accepted" },
-      ],
-    }).populate("fromUserId",USER_SAFE_DATA)
+    const connectionRequests = await connectionRequest
+      .find({
+        $or: [
+          { toUserId: loggedInUser._id, status: "accepted" },
+          { fromUserId: loggedInUser._id, status: "accepted" },
+        ],
+      })
+      .populate("fromUserId", USER_SAFE_DATA)
+      .populate("toUserId", USER_SAFE_DATA);
 
-    const data = connectionRequests.map((row)=> row.fromUserId);
+    const data = connectionRequests.map((row) => {
+      if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+        return row.toUserId;
+      }
+      return row.fromUserId;
+    });
 
     res.json({ data: data });
   } catch (err) {
