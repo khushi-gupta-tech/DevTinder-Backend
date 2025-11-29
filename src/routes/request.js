@@ -47,6 +47,7 @@ requestRouter.post(
         status,
       });
       const data = await connectionRequest.save();
+
       res.json({
         message: req.user.firstName + "is" + status + "in" + toUser.firstName,
         data,
@@ -82,10 +83,10 @@ requestRouter.post(
           .json({ message: "Connection request not found" });
       }
 
-      connectionRequest.status= status;
-      const data = await connectionRequest.save()
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
 
-      res.json({message:"Connection accepted",data:data})
+      res.json({ message: "Connection accepted", data: data });
     } catch (err) {
       res.status(400).send("ERROR:" + err.message);
     }
