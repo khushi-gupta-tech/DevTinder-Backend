@@ -8,10 +8,11 @@ const cookieParser = require("cookie-parser");
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://devtinder.click"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -21,12 +22,11 @@ const requestRouter = require("./routes/request");
 const userRouter = require("./routes/user");
 const paymentRouter = require("./routes/payment")
 
-app.use("/api/auth", authRouter);
-app.use("/api/profile", profileRouter);
-app.use("/api/request", requestRouter);
-app.use("/api/user", userRouter);
-app.use("/api/payment", paymentRouter);
-
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
+app.use("/", userRouter);
+app.use("/",paymentRouter);
 
 connectDB()
   .then(() => {
