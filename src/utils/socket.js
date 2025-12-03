@@ -36,7 +36,7 @@ const initializeSocket = (server) => {
 
           if (!chat) {
             chat = new Chat({
-              paticipants: [userId, targetUserId],
+              participants: [userId, targetUserId],
               messages: [],
             });
           }
