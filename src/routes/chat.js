@@ -1,13 +1,14 @@
 const express = require("express");
 const { Chat } = require("../models/chat");
-const {userAuth} = require("../middlewares/auth")
+const {userAuth} = require("../middlewares/auth");
+const ConnectionRequest = require("../models/connectionRequest");
 const chatRouter = express.Router();
 
 chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
   try {
     const { targetUserId } = req.params;
     const userId = req.user._id;
-
+    
     let chat = await Chat.findOne({
       participants: { $all: [userId, targetUserId] },
     })
